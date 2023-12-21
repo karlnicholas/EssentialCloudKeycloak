@@ -16,6 +16,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction.clientRegistrationId;
@@ -41,11 +42,17 @@ public class BffController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             model.addAttribute("profile", authentication.getPrincipal());
-            String transfers = webClient.get()
-                    .uri(uriBuilder -> uriBuilder.scheme("http").host("localhost").port(8120).path("/api/v1/listTransferRequests").queryParam("principalName", authentication.getName()).build())
-                    .attributes(clientRegistrationId("auth0-login"))
-                    .retrieve().bodyToMono(String.class).block();
-            List<TransferModel> transferList = objectMapper.readValue(transfers, new TypeReference<>() {});
+            List<TransferModel> transferList;
+            try {
+                String transfers = webClient.get()
+                        .uri(uriBuilder -> uriBuilder.scheme("http").host("localhost").port(8120).path("/api/v1/listTransferRequests").queryParam("principalName", authentication.getName()).build())
+                        .attributes(clientRegistrationId("auth0-login"))
+                        .retrieve().bodyToMono(String.class).block();
+                transferList = objectMapper.readValue(transfers, new TypeReference<>() {});
+            } catch (Exception e) {
+                log.error("Cannot query tranfer service", e);
+                transferList = Collections.emptyList();
+            }
             model.addAttribute("transfers", transferList);
         }
         return "transfers";

@@ -44,12 +44,13 @@ public class SecurityConfiguration {
     private LogoutHandler oidcLogoutHandler() {
         return (request, response, authentication) -> {
             try {
-                response.sendRedirect( issuer + "v2/logout?client_id=" + clientId + "&returnTo=http://localhost:8080/");
+                response.sendRedirect( issuer + "/protocol/openid-connect/logout?client_id=EssentialCloud&post_logout_redirect_uri=http://localhost:8080/");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         };
     }
+// http://localhost:8980/realms/EssentialCloud/protocol/openid-connect/logout?c
 //    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClientLogin() {
 //        DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient =
 //                new DefaultAuthorizationCodeTokenResponseClient();
