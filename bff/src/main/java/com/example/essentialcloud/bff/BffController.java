@@ -1,6 +1,5 @@
 package com.example.essentialcloud.bff;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +37,7 @@ public class BffController {
     }
 
     @GetMapping("/transfers")
-    public String transfers(Model model) throws JsonProcessingException {
+    public String transfers(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             model.addAttribute("profile", authentication.getPrincipal());
@@ -50,7 +49,7 @@ public class BffController {
                         .retrieve().bodyToMono(String.class).block();
                 transferList = objectMapper.readValue(transfers, new TypeReference<>() {});
             } catch (Exception e) {
-                log.error("Cannot query tranfer service", e);
+                log.error("Cannot query transfer service", e);
                 transferList = Collections.emptyList();
             }
             model.addAttribute("transfers", transferList);
@@ -74,8 +73,13 @@ public class BffController {
                         .attributes(clientRegistrationId("auth0-login"))
                         .retrieve().bodyToMono(String.class);
                 Tuple2<String, String> balances = Mono.zip(checkingBalance, savingBalance).block();
-                model.addAttribute("checkingBalance", balances.getT1());
-                model.addAttribute("savingBalance", balances.getT2());
+                if ( balances != null ) {
+                    model.addAttribute("checkingBalance", balances.getT1());
+                    model.addAttribute("savingBalance", balances.getT2());
+                } else {
+                    model.addAttribute("checkingBalance", "ERROR");
+                    model.addAttribute("savingBalance", "ERROR");
+                }
             } catch ( Exception ex) {
                 log.error("Error finding balances", ex);
             }
