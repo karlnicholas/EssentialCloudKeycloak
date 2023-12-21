@@ -7,13 +7,13 @@ spring:
       client:
         registration:
           auth0-login:
-            client-id: ${env.ESSENTIALCLOUD-CLIENT-ID}
-            client-secret: ${env.ESSENTIALCLOUD-CLIENT-SECRET}
+            client-id: ${essentialcloud-client-id}
+            client-secret: ${essentialcloud-client-secret}
             provider: auth0
             scope: openid,profile
         provider:
           auth0:
-            issuer-uri: ${env.ESSENTIALCLOUD-ISSUER-URI}
+            issuer-uri: ${essentialcloud-issuer-uri}
 
 #logging:
 #  level:
