@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +26,12 @@ import static org.springframework.security.oauth2.client.web.reactive.function.c
 @Slf4j
 public class BffController {
     private final WebClient webClient;
+    private final BffService bffService;
     private final ObjectMapper objectMapper;
 
-    public BffController(WebClient webClient, ObjectMapper objectMapper) {
+    public BffController(WebClient webClient, BffService bffService, ObjectMapper objectMapper) {
         this.webClient = webClient;
+        this.bffService = bffService;
         this.objectMapper = objectMapper;
     }
 

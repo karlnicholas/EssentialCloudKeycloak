@@ -6,6 +6,8 @@ import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+
 @Service
 public class UserInfoService {
     private final ObjectMapper objectMapper;
@@ -25,8 +27,9 @@ public class UserInfoService {
             UserInfo database = userInfoRepository.findUserInfoByAuthenticationId(authenticationId)
                     .orElseThrow(()->new UserInfoNotFoundException("UserInfo not found for " + authenticationId));
             userInfo = objectMapper.writeValueAsString(database);
-            vOps.set(authenticationId, userInfo);
+            vOps.set(authenticationId, userInfo, Duration.ofMinutes(15));
         }
+        System.out.println("userInfo" + userInfo);
         return userInfo;
     }
 }

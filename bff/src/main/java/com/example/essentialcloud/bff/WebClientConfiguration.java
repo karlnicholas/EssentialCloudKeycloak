@@ -27,12 +27,6 @@ public class WebClientConfiguration {
                 OAuth2AuthorizedClientProviderBuilder.builder()
                         .clientCredentials()
                         .refreshToken()
-//                        .clientCredentials((builder) ->
-//                                builder.accessTokenResponseClient(clientCredentialsAccessTokenResponseClient())
-//                                        .build())
-//                        .refreshToken(refreshTokenGrantBuilder ->
-//                                refreshTokenGrantBuilder.accessTokenResponseClient(clientCredentialsRefreshTokenResponseClient())
-//                                        .build())
                         .build();
 
         AuthorizedClientServiceOAuth2AuthorizedClientManager authorizedClientManager =
@@ -42,24 +36,4 @@ public class WebClientConfiguration {
 
         return authorizedClientManager;
     }
-//
-//    public OAuth2AccessTokenResponseClient<OAuth2ClientCredentialsGrantRequest> clientCredentialsAccessTokenResponseClient() {
-//
-//        DefaultClientCredentialsTokenResponseClient accessTokenResponseClient =
-//                new DefaultClientCredentialsTokenResponseClient();
-//        accessTokenResponseClient.setRequestEntityConverter(new CustomClientCredRequestEntityConverter());
-//
-//        return accessTokenResponseClient;
-//    }
-//    public OAuth2AccessTokenResponseClient<OAuth2RefreshTokenGrantRequest> clientCredentialsRefreshTokenResponseClient() {
-//
-//        DefaultRefreshTokenTokenResponseClient accessTokenResponseClient =
-//                new DefaultRefreshTokenTokenResponseClient();
-//        accessTokenResponseClient.setRequestEntityConverter(new CustomRefreshRequestEntityConverter());
-//
-//        return accessTokenResponseClient;
-//    }
-//
-//    private static Converter<OAuth2ClientCredentialsGrantRequest, MultiValueMap<String, String>> parametersConverter() {    };
-
 }

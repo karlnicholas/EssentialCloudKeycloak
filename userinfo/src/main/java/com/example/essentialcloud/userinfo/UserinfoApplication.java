@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/")
 @EnableCaching
-@Configuration
-@EnableWebSecurity
 public class UserinfoApplication {
 
 	public static void main(String[] args) {
@@ -35,12 +33,4 @@ public class UserinfoApplication {
 		return userInfoService.retrieveUserInfoByAuthenticationId(authenticationId);
 	}
 
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(authorize -> authorize
-				.anyRequest().authenticated()
-			)
-			.oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
-		return http.build();
-	}
 }

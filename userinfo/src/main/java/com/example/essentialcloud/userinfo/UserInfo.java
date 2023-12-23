@@ -12,10 +12,12 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class UserInfo implements Serializable {
     @Id
     private Long id;
     private String authenticationId;
     private Long checkingAccountId;
     private Long savingAccountId;
+    private Boolean transferAdmin;
 }
