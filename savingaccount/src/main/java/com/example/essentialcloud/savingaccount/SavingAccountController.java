@@ -2,7 +2,6 @@ package com.example.essentialcloud.savingaccount;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,11 +19,13 @@ import static org.springframework.security.oauth2.client.web.reactive.function.c
 @RequestMapping("/api/v1")
 public class SavingAccountController {
     private final SavingAccountService savingAccountService;
-    private final ObjectMapper objectMapper;
+   private final ObjectMapper objectMapper;
+   private final WebClient webClient;
 
-    public SavingAccountController(SavingAccountService savingAccountService, ObjectMapper objectMapper) {
+    public SavingAccountController(SavingAccountService savingAccountService, ObjectMapper objectMapper, WebClient webClient) {
         this.savingAccountService = savingAccountService;
         this.objectMapper = objectMapper;
+        this.webClient = webClient;
     }
 
     @GetMapping("account")
@@ -50,8 +51,6 @@ public class SavingAccountController {
         return savingAccountService.verifytransfer(transferId);
     }
 
-    @Autowired
-    WebClient webClient;
     private Long getSavingAccountId(String principalName) {
         return webClient.get()
                 .uri(builder -> builder

@@ -24,12 +24,10 @@ import static org.springframework.security.oauth2.client.web.reactive.function.c
 @Slf4j
 public class BffController {
     private final WebClient webClient;
-    private final BffService bffService;
     private final ObjectMapper objectMapper;
 
-    public BffController(WebClient webClient, BffService bffService, ObjectMapper objectMapper) {
+    public BffController(WebClient webClient, ObjectMapper objectMapper) {
         this.webClient = webClient;
-        this.bffService = bffService;
         this.objectMapper = objectMapper;
     }
 

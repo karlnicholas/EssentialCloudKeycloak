@@ -8,10 +8,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableWebSecurity
 @EnableTransactionManagement
-public class SavingaccountApplication {
+public class SavingAccountApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SavingaccountApplication.class, args);
+		SpringApplication.run(SavingAccountApplication.class, args);
 	}
 
 
