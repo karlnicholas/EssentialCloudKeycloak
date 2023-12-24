@@ -26,7 +26,7 @@
       <div sec:authorize="isAuthenticated()">
         <a class="nav-item nav-link active" href="/transfers">Transfers<span class="sr-only">(current)</span></a>
       </div>
-      <div sec:authorize="hasAuthority('SCOPE_transferbroker')">
+      <div sec:authorize="hasRole('TRANSFER_ADMIN')">
         <a class="nav-item nav-link active" href="/transferbroker">Transfer Broker<span class="sr-only">(current)</span></a>
       </div>
       <div sec:authorize="isAuthenticated()">
@@ -35,7 +35,7 @@
         </form>
       </div>
       <div sec:authorize="isAuthenticated()">
-        <img th:src="${profile.attributes.picture}" width="40" height="40" class="nav-item rounded-circle"/>
+        <img th:src="${profile.attributes.picture}" width="40" height="40" class="nav-item rounded-circle" alt=""/>
       </div>
     </div>
   </div>
