@@ -53,7 +53,8 @@ public class TransferRequestService {
         }
         if (userInfo != null) {
             try {
-                return objectMapper.readTree(userInfo).findValue("transferAdmin").asBoolean();
+                if ( objectMapper.readTree(userInfo).findValue("transferAdmin") != null )
+                    return Boolean.TRUE;
             } catch (JsonProcessingException e) {
                 return Boolean.FALSE;
             }

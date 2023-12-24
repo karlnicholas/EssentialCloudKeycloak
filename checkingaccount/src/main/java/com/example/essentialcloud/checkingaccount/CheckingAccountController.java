@@ -1,6 +1,7 @@
 package com.example.essentialcloud.checkingaccount;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -62,7 +63,12 @@ public class CheckingAccountController {
                 .bodyToMono(String.class)
                 .<Long>handle((userInfo, sink) -> {
                     try {
-                        sink.next(objectMapper.readTree(userInfo).findValue("checkingAccountId").asLong());
+                        JsonNode search = objectMapper.readTree(userInfo).findValue("checkingAccountId");
+                        if ( search!= null ) {
+                            sink.next(search.asLong());
+                        } else {
+                            sink.next(0L);
+                        }
                     } catch (JsonProcessingException e) {
                         sink.error(new RuntimeException(e));
                     }

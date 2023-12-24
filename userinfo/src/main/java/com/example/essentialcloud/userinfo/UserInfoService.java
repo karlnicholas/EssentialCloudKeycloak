@@ -29,16 +29,13 @@ public class UserInfoService {
         if ( userInfo == null ) {
             Optional<UserInfo> dbUser = userInfoRepository.findUserInfoByAuthenticationId(authenticationId);
             if ( dbUser.isPresent()) {
-                        try {
-                            userInfo = objectMapper.writeValueAsString(dbUser.get());
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
+                userInfo = objectMapper.writeValueAsString(dbUser.get());
             }
         }
-        if ( userInfo != null ) {
-            vOps.set(authenticationId, userInfo, Duration.ofMinutes(15));
+        if ( userInfo == null ) {
+            userInfo = "";
         }
+        vOps.set(authenticationId, userInfo, Duration.ofMinutes(15));
         return userInfo;
     }
 }
