@@ -10,7 +10,16 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfiguration {
     @Bean
-    WebClient internalWebClient(OAuth2AuthorizedClientManager authorizedClientManager) {
+    public WebClient userInfoWebClient(OAuth2AuthorizedClientManager authorizedClientManager) {
+        ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2Client =
+                new ServletOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
+        return WebClient.builder()
+                .baseUrl("http://localhost:8100/")
+                .apply(oauth2Client.oauth2Configuration())
+                .build();
+    }
+    @Bean
+    public WebClient internalWebClient(OAuth2AuthorizedClientManager authorizedClientManager) {
         ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2Client =
                 new ServletOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
         return WebClient.builder()
@@ -19,7 +28,7 @@ public class WebClientConfiguration {
                 .build();
     }
     @Bean
-    WebClient checkingAccountWebClient(OAuth2AuthorizedClientManager authorizedClientManager) {
+    public WebClient checkingAccountWebClient(OAuth2AuthorizedClientManager authorizedClientManager) {
         ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2Client =
                 new ServletOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
         return WebClient.builder()
@@ -28,7 +37,7 @@ public class WebClientConfiguration {
                 .build();
     }
     @Bean
-    WebClient savingAccountWebClient(OAuth2AuthorizedClientManager authorizedClientManager) {
+    public WebClient savingAccountWebClient(OAuth2AuthorizedClientManager authorizedClientManager) {
         ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2Client =
                 new ServletOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
         return WebClient.builder()

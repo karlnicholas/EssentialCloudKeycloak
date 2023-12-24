@@ -1,5 +1,9 @@
 package com.example.essentialcloud.transferbroker;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Resource;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -15,15 +19,47 @@ public class TransferRequestService {
     private final WebClient checkingAccountWebClient;
     private final WebClient savingAccountWebClient;
     private final WebClient internalWebClient;
+    private final WebClient userInfoWebClient;
+    private final ObjectMapper objectMapper;
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, String> vOps;
 
-    public TransferRequestService(TranferRequestRepository tranferRequestRepository, BrokerAccountRepository brokerAccountRepository, WebClient checkingAccountWebClient, WebClient savingAccountWebClient, WebClient internalWebClient) {
+
+    public TransferRequestService(TranferRequestRepository tranferRequestRepository, BrokerAccountRepository brokerAccountRepository, WebClient checkingAccountWebClient, WebClient savingAccountWebClient, WebClient internalWebClient, WebClient userInfoWebClient, ObjectMapper objectMapper) {
         this.tranferRequestRepository = tranferRequestRepository;
         this.brokerAccountRepository = brokerAccountRepository;
         this.checkingAccountWebClient = checkingAccountWebClient;
         this.savingAccountWebClient = savingAccountWebClient;
         this.internalWebClient = internalWebClient;
+        this.userInfoWebClient = userInfoWebClient;
+        this.objectMapper = objectMapper;
     }
 
+    public Boolean getUserInfo(String authenticationId) {
+        String userInfo = vOps.get(authenticationId);
+        if (userInfo == null) {
+            userInfo = userInfoWebClient.get()
+                    .uri(builder -> builder
+                            .scheme("http")
+                            .host("localhost")
+                            .port(8100)
+                            .path("/api/v1/userinfo")
+                            .queryParam("authenticationId", authenticationId)
+                            .build())
+                    .attributes(clientRegistrationId("auth0-login"))
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        }
+        if (userInfo != null) {
+            try {
+                return objectMapper.readTree(userInfo).findValue("transferAdmin").asBoolean();
+            } catch (JsonProcessingException e) {
+                return Boolean.FALSE;
+            }
+        }
+        return Boolean.FALSE;
+    }
 
     public TransferRequest createTransferRequest(TransferRequestDto transferRequestDto) {
         return tranferRequestRepository.save(TransferRequest.builder()

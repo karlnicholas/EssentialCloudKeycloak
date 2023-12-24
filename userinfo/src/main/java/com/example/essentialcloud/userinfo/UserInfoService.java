@@ -3,12 +3,15 @@ package com.example.essentialcloud.userinfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserInfoService {
     private final ObjectMapper objectMapper;
     private final UserInfoRepository userInfoRepository;
@@ -24,12 +27,18 @@ public class UserInfoService {
     public String retrieveUserInfoByAuthenticationId(String authenticationId) throws JsonProcessingException {
         String userInfo = vOps.get(authenticationId);
         if ( userInfo == null ) {
-            UserInfo database = userInfoRepository.findUserInfoByAuthenticationId(authenticationId)
-                    .orElseThrow(()->new UserInfoNotFoundException("UserInfo not found for " + authenticationId));
-            userInfo = objectMapper.writeValueAsString(database);
+            Optional<UserInfo> dbUser = userInfoRepository.findUserInfoByAuthenticationId(authenticationId);
+            if ( dbUser.isPresent()) {
+                        try {
+                            userInfo = objectMapper.writeValueAsString(dbUser.get());
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+            }
+        }
+        if ( userInfo != null ) {
             vOps.set(authenticationId, userInfo, Duration.ofMinutes(15));
         }
-        System.out.println("userInfo" + userInfo);
         return userInfo;
     }
 }

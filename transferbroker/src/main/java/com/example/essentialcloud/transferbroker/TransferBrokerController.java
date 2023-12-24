@@ -65,7 +65,7 @@ public class TransferBrokerController {
         }
     }
     @GetMapping("allTransferRequests")
-    @PreAuthorize("hasAuthority('SCOPE_transferbroker')")
+    @PreAuthorize("hasAuthority('ROLE_TRANSFER_ADMIN')")
     public String allTransferRequests() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
