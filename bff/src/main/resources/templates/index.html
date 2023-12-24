@@ -35,7 +35,7 @@
         </form>
       </div>
       <div sec:authorize="isAuthenticated()">
-        <img th:src="${profile.attributes.picture}" width="40" height="40" class="nav-item rounded-circle" alt=""/>
+        <img th:src="${picture}" width="40" height="40" class="nav-item rounded-circle" alt=""/>
       </div>
     </div>
   </div>

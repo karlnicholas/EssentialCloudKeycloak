@@ -35,7 +35,7 @@
         </form>
       </div>
       <div sec:authorize="isAuthenticated()">
-        <img th:src="${profile.attributes.picture}" width="40" height="40" class="nav-item rounded-circle" alt=""/>
+        <img th:src=".${picture}" width="40" height="40" class="nav-item rounded-circle" alt=""/>
       </div>
     </div>
   </div>
@@ -51,7 +51,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:if="${transfers.empty}">
+    <tr th:if="${transfers.isEmpty()}">
       <td colspan="3"> No Transfers </td>
     </tr>
     <tr th:each="transfer : ${transfers}">
